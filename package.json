@@ -1,0 +1,24 @@
+{
+  "name": "rsna-knee-classifier",
+  "version": "1.0.0",
+  "description": "3D Multi-View MRI Knee Abnormality Detection Pipeline for RSNA Kaggle Competition",
+  "main": "src/volumetric_preprocessor.js",
+  "type": "module",
+  "scripts": {
+    "test": "node test/verify_rsna_knee.js",
+    "start": "node test/verify_rsna_knee.js"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "keywords": [
+    "kaggle",
+    "rsna",
+    "mri",
+    "medical-imaging",
+    "dicom",
+    "deep-learning",
+    "computer-vision"
+  ],
+  "author": "Antigravity Builder",
+  "license": "MIT"
+}
