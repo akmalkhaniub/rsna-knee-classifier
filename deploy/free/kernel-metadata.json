@@ -1,0 +1,14 @@
+{
+  "id": "akmalkhaniub/rsna-knee-classifier-kernel",
+  "title": "RSNA Knee Osteoarthritis ConvNeXt-v2 Inference",
+  "code_file": "kaggle_inference.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": false,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": false,
+  "dataset_sources": ["rsna-2026-knee-osteoarthritis-detection"],
+  "competition_sources": ["rsna-2026-knee-osteoarthritis-detection"],
+  "kernel_sources": []
+}

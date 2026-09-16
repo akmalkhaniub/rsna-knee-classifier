@@ -1,0 +1,19 @@
+services:
+  rsna-knee-classifier:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: rsna-knee-classifier:latest
+    container_name: rsna-knee-classifier
+    ports:
+      - "3008:3008"
+    environment:
+      - NODE_ENV=production
+      - PORT=3008
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3008/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
