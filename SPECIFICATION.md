@@ -1,7 +1,9 @@
 # Technical Specification: 3D Multi-View MRI Knee Classifier
 **Project Name:** 3D Multi-View MRI Knee Classifier (RSNA Knee Abnormality Detection)  
-**Status:** Ready for Implementation  
+**Status:** Rebuilt in Python — produces an RSNA submission (updated 2026-09-18)  
 **Version:** 1.0.0  
+
+> **Implementation status (2026-09-18):** Rebuilt from the Node prototype (now under `legacy-js/`) into a Python package (`rsnaknee/`): real NumPy volumetric preprocessing, a heuristic multi-view classifier baseline, an optional PyTorch 2.5D multi-view fusion model scaffold, and an RSNA `submission.csv` builder + schema validator. 6 pytest cases pass. Not built: trained model weights, DICOM cross-validation, and calibration; the default runs weight-free.
 
 ---
 

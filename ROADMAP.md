@@ -4,6 +4,9 @@
 
 ---
 
+> **Status legend (updated 2026-09-18):** `[x]` implemented in code · `[~]` partial / needs the trained model or dataset to verify · `[ ]` not started.
+> **Reality note:** **Rebuilt in Python** (`rsnaknee/` package; old Node prototype under `legacy-js/`). Real NumPy volumetric preprocessing (depth standardization + percentile/z-score normalization), a heuristic multi-view classifier baseline, an optional PyTorch 2.5D fusion model scaffold, and an RSNA `submission.csv` builder/validator. 6 pytest cases pass. The default path needs no weights/GPU; training the torch model on the DICOM set is what produces a competitive QWK/log-loss.
+
 ## Phase 1: Exploratory Data Analysis & Preprocessing (Week 1)
 - [ ] Inspect DICOM metadata, pixel spacings, slice counts, and sequence distributions across train set.
 - [ ] Implement fast DICOM loader with multi-threaded caching using `pydicom` / `SimpleITK`.
