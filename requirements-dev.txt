@@ -1,0 +1,6 @@
+-r requirements.txt
+pytest>=8.0
+# Optional, for real data / training:
+# pydicom>=2.4
+# torch>=2.2
+# torchvision>=0.17
