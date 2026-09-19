@@ -33,6 +33,10 @@ pytest -q                       # preprocessing + classifier + submission-schema
 python notebooks/kaggle_run.py  # wire load_studies() to the competition data to submit
 ```
 
+## Metrics
+
+`rsnaknee.metrics` computes the competition scores on any labeled split so you can report a real number: `quadratic_weighted_kappa` (ordinal KL-grade agreement) and `weighted_log_loss` (multi-label abnormality probabilities). Tested in `tests/test_metrics.py` (perfect agreement → 1.0; far errors penalized more than near).
+
 ## Scope & honesty
 
 The preprocessing and submission plumbing are real and tested; the default classifier is a
