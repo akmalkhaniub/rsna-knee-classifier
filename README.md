@@ -33,6 +33,10 @@ pytest -q                       # preprocessing + classifier + submission-schema
 python notebooks/kaggle_run.py  # wire load_studies() to the competition data to submit
 ```
 
+## Training loop
+
+`rsnaknee.train.train_and_score()` is a complete train → predict → **score** loop: it fits a small classifier on a synthetic *learnable* dataset and reports **QWK** on a held-out split, proving the pipeline end-to-end. Swap `make_dataset` for real DICOM-derived features to train for real. Requires PyTorch (optional dep); the test skips cleanly where torch is unavailable and runs on Kaggle / any torch-capable env.
+
 ## Metrics
 
 `rsnaknee.metrics` computes the competition scores on any labeled split so you can report a real number: `quadratic_weighted_kappa` (ordinal KL-grade agreement) and `weighted_log_loss` (multi-label abnormality probabilities). Tested in `tests/test_metrics.py` (perfect agreement → 1.0; far errors penalized more than near).
