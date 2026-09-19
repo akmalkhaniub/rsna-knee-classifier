@@ -7,3 +7,6 @@ build/
 dist/
 submission.csv
 *.dcm
+
+.coverage
+htmlcov/
