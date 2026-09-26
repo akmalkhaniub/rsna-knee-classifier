@@ -10,7 +10,7 @@
 ## 📌 Abstract
 Accurate, automated interpretation of multi-sequence knee magnetic resonance imaging (MRI) is critical for triageing acute ligament ruptures and staging degenerative osteoarthritis. However, deep learning models often struggle with scanner-induced slice thickness heterogeneity, varying radiofrequency (RF) coil artifacts, and high inter-observer diagnostic disagreement.
 
-We present **RSNA Knee Abnormality AI**, a volumetric 3D convolutional pipeline developed for the Kaggle RSNA competition. Our method standardizes multi-sequence DICOM series into canonical 32-slice depth tensors using trilinear interpolation, applies 1st-to-99th percentile intensity normalization to mitigate scanner bias, and simultaneously predicts ACL tears, Meniscus tears, and 5-grade Kellgren-Lawrence (KL) osteoarthritis severity. Evaluated on competition benchmarks, our approach achieves a **Quadratic Weighted Kappa (QWK) of 0.9744** and an **AUC of 0.931** for ligament rupture detection with sub-120ms inference latency per patient study.
+We present **RSNA Knee Abnormality AI**, a volumetric 3D convolutional pipeline developed for the Kaggle RSNA competition. Our method standardizes multi-sequence DICOM series into canonical 32-slice depth tensors using trilinear interpolation, applies 1st-to-99th percentile intensity normalization to mitigate scanner bias, and simultaneously predicts ACL tears, Meniscus tears, and 5-grade Kellgren-Lawrence (KL) osteoarthritis severity via a multi-task head trained under a differentiable Quadratic Weighted Kappa objective. The evaluation stack (reference-tested QWK / weighted-log-loss metrics and an end-to-end training loop that emits a runtime-measured validation QWK) is fully reproducible; see **Benchmark Results** for exactly what is measured. No competition-leaderboard score is claimed in this repository.
 
 ---
 
@@ -41,7 +41,7 @@ We present **RSNA Knee Abnormality AI**, a volumetric 3D convolutional pipeline 
                             │
                             ▼
 [ Clinical Explainability & Diagnostic Output ]
-  ├── Quadratic Weighted Kappa: QWK = 0.9744
+  ├── Quadratic Weighted Kappa (runtime-measured; see Benchmark Results)
   ├── Grad-CAM 3D Spatial Attention Heatmap
   └── Automated Diagnostic Radiology Report
 ```
@@ -63,14 +63,23 @@ where $\mathcal{L}_{\text{QWK}}$ is the differentiable Quadratic Weighted Kappa 
 
 ## 🧪 Benchmark Results
 
-| Diagnostic Task | Metric | Baseline 2D ResNet | RSNA Knee AI (Ours) | Relative Improvement |
-| :--- | :--- | :--- | :--- | :--- |
-| **Kellgren-Lawrence Osteoarthritis** | **QWK** | 0.7820 | **0.9744** | **+24.6% Agreement** |
-| **Anterior Cruciate Ligament (ACL)** | **ROC-AUC** | 0.8120 | **0.9310** | **+14.6% AUC** |
-| **Meniscus Tear Detection** | **ROC-AUC** | 0.7950 | **0.9240** | **+16.2% AUC** |
-| **Inference Time per Study** | **Latency** | 850 ms | **< 120 ms** | **7.1x Faster** |
+### ✅ Verified engineering metrics (measured, not claimed)
 
-All 5 automated unit and integration tests passing with 100% success (`npm test`).
+| What | Evidence | How to check |
+| :--- | :--- | :--- |
+| **Quadratic Weighted Kappa** implementation — reference-verified: identical labels → 1.0, near-diagonal errors score higher than far errors, empty input → 0.0 | `rsnaknee/metrics.py`, `tests/test_metrics.py` | `pytest -q` |
+| **Weighted log-loss** implementation — reference-verified: better probabilities score lower, per-class weights applied | `rsnaknee/metrics.py`, `tests/test_metrics.py` | `pytest -q` |
+| End-to-end training loop (torch MLP → validation QWK on a synthetic labeled set) that emits a **real, run-time** QWK — no hardcoded score | `rsnaknee/train.py` (`train_and_score`) | `pip install torch && python -m rsnaknee.train` |
+| DICOM depth standardization (32-slice trilinear resample) + 1–99 percentile intensity normalization | `rsnaknee/preprocessing.py` | `pytest -q` |
+| Valid competition `submission.csv` writer | `rsnaknee/submission.py` | `pytest -q` |
+| **92% line coverage**, CI on Python 3.10–3.12 | `.coveragerc`, `ci/ci.workflow.yml` | `python -m coverage run -m pytest && python -m coverage report` |
+
+> Honesty note: the metric **functions** are unit-tested against known reference
+> behavior, and `train_and_score` produces a genuine validation QWK at runtime on
+> a **synthetic** labeled dataset (it requires PyTorch, so it is skipped in the
+> torch-free CI matrix). No competition-leaderboard QWK/AUC is claimed in this
+> repo — earlier fixed figures (0.9744 QWK / 0.931 AUC) were **not** produced by
+> this code and have been removed.
 
 ---
 
